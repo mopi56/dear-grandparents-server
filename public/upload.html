@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#080b12" />
+        <title>Souvenirs</title>
+
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            :root {
+                --bg: #070a10;
+                --bg-2: #0d111a;
+                --glass: rgba(255, 255, 255, 0.075);
+                --glass-strong: rgba(255, 255, 255, 0.11);
+                --border: rgba(255, 255, 255, 0.13);
+                --text: #f7f8fb;
+                --muted: #9ca5b5;
+                --muted-2: #70798a;
+                --accent: #8b9cff;
+                --accent-2: #c18cff;
+                --success: #61d7a1;
+                --error: #ff707c;
+            }
+
+            html,
+            body {
+                min-height: 100%;
+            }
+
+            body {
+                margin: 0;
+                color: var(--text);
+                background:
+                    radial-gradient(
+                        circle at 12% 5%,
+                        rgba(93, 112, 255, 0.2),
+                        transparent 30%
+                    ),
+                    radial-gradient(
+                        circle at 90% 15%,
+                        rgba(190, 95, 255, 0.16),
+                        transparent 28%
+                    ),
+                    radial-gradient(
+                        circle at 50% 100%,
+                        rgba(45, 116, 255, 0.1),
+                        transparent 35%
+                    ),
+                    var(--bg);
+                font-family:
+                    Inter,
+                    ui-sans-serif,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    sans-serif;
+                padding: 42px 18px 60px;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                background: linear-gradient(
+                    120deg,
+                    transparent 20%,
+                    rgba(255, 255, 255, 0.025),
+                    transparent 80%
+                );
+            }
+
+            .container {
+                width: 100%;
+                max-width: 900px;
+                margin: 0 auto;
+            }
+
+            header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 7px 12px;
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.045);
+                color: #cbd2df;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                backdrop-filter: blur(16px);
+            }
+
+            .eyebrow::before {
+                content: "";
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--success);
+                box-shadow: 0 0 12px rgba(97, 215, 161, 0.8);
+            }
+
+            h1 {
+                margin: 18px 0 8px;
+                font-size: clamp(38px, 7vw, 62px);
+                line-height: 0.98;
+                letter-spacing: -0.055em;
+                font-weight: 750;
+            }
+
+            .subtitle {
+                max-width: 560px;
+                margin: 0 auto;
+                color: var(--muted);
+                line-height: 1.55;
+                font-size: 15px;
+            }
+
+            .main-card {
+                position: relative;
+                overflow: hidden;
+                padding: 22px;
+                border: 1px solid var(--border);
+                border-radius: 26px;
+                background: linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.09),
+                    rgba(255, 255, 255, 0.045)
+                );
+                box-shadow:
+                    0 35px 100px rgba(0, 0, 0, 0.38),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+                backdrop-filter: blur(28px);
+                -webkit-backdrop-filter: blur(28px);
+            }
+
+            .main-card::after {
+                content: "";
+                position: absolute;
+                width: 260px;
+                height: 260px;
+                right: -150px;
+                top: -150px;
+                border-radius: 50%;
+                background: rgba(139, 156, 255, 0.14);
+                filter: blur(35px);
+                pointer-events: none;
+            }
+
+            .section-label {
+                margin: 2px 2px 12px;
+                color: #d7dce6;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            .dropzone {
+                position: relative;
+                min-height: 300px;
+                display: grid;
+                place-items: center;
+                overflow: hidden;
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                border-radius: 20px;
+                background:
+                    linear-gradient(
+                        135deg,
+                        rgba(255, 255, 255, 0.065),
+                        rgba(255, 255, 255, 0.025)
+                    ),
+                    rgba(5, 8, 14, 0.38);
+                cursor: pointer;
+                transition: 0.22s ease;
+            }
+
+            .dropzone:hover,
+            .dropzone.dragover {
+                border-color: rgba(139, 156, 255, 0.65);
+                background:
+                    linear-gradient(
+                        135deg,
+                        rgba(139, 156, 255, 0.11),
+                        rgba(193, 140, 255, 0.06)
+                    ),
+                    rgba(5, 8, 14, 0.42);
+                transform: translateY(-1px);
+            }
+
+            .drop-content {
+                text-align: center;
+                padding: 35px;
+            }
+
+            .drop-icon {
+                width: 64px;
+                height: 64px;
+                margin: 0 auto 18px;
+                display: grid;
+                place-items: center;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 19px;
+                background: rgba(255, 255, 255, 0.07);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+                font-size: 30px;
+                color: #dfe3ff;
+            }
+
+            .drop-title {
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
+
+            .drop-subtitle {
+                margin-top: 8px;
+                color: var(--muted);
+                font-size: 13px;
+            }
+
+            .drop-hint {
+                margin-top: 18px;
+                color: var(--muted-2);
+                font-size: 11px;
+            }
+
+            #fileInput {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .file-info {
+                display: none;
+                margin-top: 14px;
+            }
+
+            .file-info.visible {
+                display: block;
+            }
+
+            .file-summary {
+                display: flex;
+                justify-content: space-between;
+                gap: 15px;
+                align-items: center;
+                margin-bottom: 12px;
+                color: var(--muted);
+                font-size: 12px;
+            }
+
+            .file-count {
+                color: #e7eaf1;
+                font-weight: 700;
+            }
+
+            .preview-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+                gap: 9px;
+            }
+
+            .preview {
+                position: relative;
+                aspect-ratio: 1 / 1;
+                overflow: hidden;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 13px;
+                background: #111620;
+            }
+
+            .preview img,
+            .preview video {
+                width: 100%;
+                height: 100%;
+                display: block;
+                object-fit: cover;
+            }
+
+            .preview.video::after {
+                content: "▶";
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 34px;
+                height: 34px;
+                display: grid;
+                place-items: center;
+                transform: translate(-50%, -50%);
+                border-radius: 50%;
+                background: rgba(0, 0, 0, 0.58);
+                color: white;
+                font-size: 12px;
+            }
+
+            .preview-name {
+                position: absolute;
+                left: 6px;
+                right: 6px;
+                bottom: 6px;
+                overflow: hidden;
+                padding: 5px 7px;
+                border-radius: 7px;
+                background: rgba(0, 0, 0, 0.62);
+                color: white;
+                font-size: 10px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                backdrop-filter: blur(8px);
+            }
+
+            .file-error {
+                margin-top: 9px;
+                color: var(--error);
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .divider {
+                height: 1px;
+                margin: 24px 0;
+                background: rgba(255, 255, 255, 0.09);
+            }
+
+            .fields {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+
+            .field.full {
+                grid-column: 1 / -1;
+            }
+
+            label {
+                display: block;
+                margin: 0 0 7px 2px;
+                color: #d7dce5;
+                font-size: 12px;
+                font-weight: 650;
+            }
+
+            .optional {
+                color: var(--muted-2);
+                font-weight: 400;
+            }
+
+            input[type="text"],
+            textarea {
+                width: 100%;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 12px;
+                outline: none;
+                background: rgba(0, 0, 0, 0.18);
+                color: var(--text);
+                font: inherit;
+                font-size: 14px;
+                transition: 0.18s ease;
+            }
+
+            input[type="text"] {
+                height: 48px;
+                padding: 0 14px;
+            }
+
+            textarea {
+                min-height: 105px;
+                padding: 13px 14px;
+                resize: vertical;
+                line-height: 1.5;
+            }
+
+            input[type="text"]:focus,
+            textarea:focus {
+                border-color: rgba(139, 156, 255, 0.72);
+                background: rgba(0, 0, 0, 0.25);
+                box-shadow: 0 0 0 3px rgba(139, 156, 255, 0.08);
+            }
+
+            input::placeholder,
+            textarea::placeholder {
+                color: #697283;
+            }
+
+            .field-footer {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 6px;
+                color: var(--muted-2);
+                font-size: 10px;
+            }
+
+            .submit {
+                width: 100%;
+                min-height: 52px;
+                margin-top: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.16);
+                border-radius: 13px;
+                background: linear-gradient(
+                    100deg,
+                    var(--accent),
+                    var(--accent-2)
+                );
+                color: white;
+                font: inherit;
+                font-size: 14px;
+                font-weight: 750;
+                cursor: pointer;
+                box-shadow: 0 12px 30px rgba(139, 156, 255, 0.18);
+                transition: 0.18s ease;
+            }
+
+            .submit:hover:not(:disabled) {
+                transform: translateY(-1px);
+                box-shadow: 0 16px 38px rgba(139, 156, 255, 0.27);
+            }
+
+            .submit:disabled {
+                opacity: 0.42;
+                cursor: not-allowed;
+                box-shadow: none;
+            }
+
+            .progress {
+                display: none;
+                margin-top: 18px;
+                padding: 13px 14px;
+                border: 1px solid rgba(255, 255, 255, 0.09);
+                border-radius: 12px;
+                background: rgba(0, 0, 0, 0.16);
+            }
+
+            .progress.visible {
+                display: block;
+            }
+
+            .progress-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+                color: var(--muted);
+                font-size: 11px;
+            }
+
+            .progress-track {
+                height: 5px;
+                overflow: hidden;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.09);
+            }
+
+            .progress-bar {
+                width: 0;
+                height: 100%;
+                border-radius: inherit;
+                background: linear-gradient(
+                    90deg,
+                    var(--accent),
+                    var(--accent-2)
+                );
+                transition: width 0.15s linear;
+            }
+
+            .status {
+                min-height: 20px;
+                margin-top: 15px;
+                text-align: center;
+                font-size: 13px;
+                line-height: 1.5;
+            }
+
+            .status.success {
+                color: var(--success);
+            }
+            .status.error {
+                color: var(--error);
+            }
+
+            footer {
+                display: flex;
+                justify-content: space-between;
+                gap: 15px;
+                margin-top: 13px;
+                padding: 0 5px;
+                color: var(--muted-2);
+                font-size: 10px;
+            }
+
+            @media (max-width: 650px) {
+                body {
+                    padding: 24px 12px 40px;
+                }
+                header {
+                    margin-bottom: 22px;
+                }
+                h1 {
+                    font-size: 40px;
+                }
+                .main-card {
+                    padding: 14px;
+                    border-radius: 20px;
+                }
+                .dropzone {
+                    min-height: 240px;
+                }
+                .fields {
+                    grid-template-columns: 1fr;
+                    gap: 14px;
+                }
+                .field.full {
+                    grid-column: auto;
+                }
+                .preview-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+                footer {
+                    flex-direction: column;
+                    gap: 4px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <main class="container">
+            <header>
+                <div class="eyebrow">Album familial</div>
+                <h1>Un moment à partager</h1>
+                <p class="subtitle">
+                    Ajoutez vos photos et vidéos à l’album. Vous pouvez
+                    également laisser quelques mots pour raconter ce souvenir.
+                </p>
+            </header>
+
+            <section class="main-card">
+                <form id="uploadForm">
+                    <div class="section-label">01 · Vos souvenirs</div>
+
+                    <div class="dropzone" id="dropzone">
+                        <input
+                            id="fileInput"
+                            type="file"
+                            name="files"
+                            accept="image/*,video/*"
+                            multiple
+                        />
+
+                        <div class="drop-content">
+                            <div class="drop-icon">＋</div>
+                            <div class="drop-title">
+                                Déposer vos photos ou vidéos
+                            </div>
+                            <div class="drop-subtitle">
+                                Cliquez ici ou glissez-déposez vos fichiers
+                            </div>
+                            <div class="drop-hint">
+                                Photos jusqu’à 20 Mo · Vidéos jusqu’à 1 Go
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="file-info" id="fileInfo">
+                        <div class="file-summary">
+                            <span class="file-count" id="fileCount"
+                                >0 fichier</span
+                            >
+                            <span id="totalSize">0 Mo</span>
+                        </div>
+
+                        <div class="preview-grid" id="previewGrid"></div>
+                        <div class="file-error" id="fileError"></div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="section-label">02 · Ajouter un contexte</div>
+
+                    <div class="fields">
+                        <div class="field">
+                            <label for="sender">
+                                Prénom
+                                <span class="optional">— facultatif</span>
+                            </label>
+                            <input
+                                id="sender"
+                                type="text"
+                                name="sender"
+                                placeholder="Votre prénom"
+                                autocomplete="given-name"
+                                maxlength="50"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label for="code">Code famille</label>
+                            <input
+                                id="code"
+                                type="text"
+                                name="code"
+                                placeholder="Entrez le code"
+                                autocomplete="off"
+                                required
+                            />
+                        </div>
+
+                        <div class="field full">
+                            <label for="comment">
+                                Un mot sur ce souvenir
+                                <span class="optional">— facultatif</span>
+                            </label>
+                            <textarea
+                                id="comment"
+                                name="comment"
+                                placeholder="Où était-ce ? Avec qui ? Une petite anecdote ?"
+                                maxlength="500"
+                            ></textarea>
+                            <div class="field-footer">
+                                <span id="commentCount">0 / 500</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-label" style="margin-top: 24px">
+                        03 · Partager
+                    </div>
+
+                    <button
+                        class="submit"
+                        id="submitButton"
+                        type="submit"
+                        disabled
+                    >
+                        Ajouter au souvenir
+                    </button>
+
+                    <div class="progress" id="progressContainer">
+                        <div class="progress-header">
+                            <span id="progressText">Envoi…</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="status" id="status"></div>
+                </form>
+            </section>
+
+            <footer>
+                <span>Photos · Vidéos</span>
+                <span>20 Mo / photo · 1 Go / vidéo</span>
+            </footer>
+        </main>
+
+        <script>
+            const MAX_PHOTO_SIZE = 20 * 1024 * 1024;
+            const MAX_VIDEO_SIZE = 1000 * 1024 * 1024;
+            const MAX_FILES = 100;
+            const MAX_COMMENT_LENGTH = 500;
+
+            const form = document.getElementById("uploadForm");
+            const fileInput = document.getElementById("fileInput");
+            const dropzone = document.getElementById("dropzone");
+            const fileInfo = document.getElementById("fileInfo");
+            const fileCount = document.getElementById("fileCount");
+            const totalSize = document.getElementById("totalSize");
+            const fileError = document.getElementById("fileError");
+            const previewGrid = document.getElementById("previewGrid");
+            const senderInput = document.getElementById("sender");
+            const commentInput = document.getElementById("comment");
+            const commentCount = document.getElementById("commentCount");
+            const codeInput = document.getElementById("code");
+            const submitButton = document.getElementById("submitButton");
+            const progressContainer =
+                document.getElementById("progressContainer");
+            const progressBar = document.getElementById("progressBar");
+            const progressText = document.getElementById("progressText");
+            const progressPercent = document.getElementById("progressPercent");
+            const status = document.getElementById("status");
+
+            function formatSize(bytes) {
+                if (bytes < 1024 * 1024) {
+                    return (bytes / 1024).toFixed(1) + " Ko";
+                }
+
+                if (bytes < 1024 * 1024 * 1024) {
+                    return (bytes / (1024 * 1024)).toFixed(1) + " Mo";
+                }
+
+                return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " Go";
+            }
+
+            function clearStatus() {
+                status.textContent = "";
+                status.className = "status";
+            }
+
+            function escapeHtml(value) {
+                return value
+                    .replaceAll("&", "&amp;")
+                    .replaceAll("<", "&lt;")
+                    .replaceAll(">", "&gt;")
+                    .replaceAll('"', "&quot;")
+                    .replaceAll("'", "&#039;");
+            }
+
+            function createPreview(file) {
+                const wrapper = document.createElement("div");
+                wrapper.className = "preview";
+
+                const url = URL.createObjectURL(file);
+
+                if (file.type.startsWith("video/")) {
+                    wrapper.classList.add("video");
+
+                    const video = document.createElement("video");
+                    video.src = url;
+                    video.muted = true;
+                    video.preload = "metadata";
+                    video.playsInline = true;
+
+                    wrapper.appendChild(video);
+                } else {
+                    const img = document.createElement("img");
+                    img.src = url;
+                    img.alt = file.name;
+                    wrapper.appendChild(img);
+                }
+
+                const name = document.createElement("div");
+                name.className = "preview-name";
+                name.textContent = file.name;
+
+                wrapper.appendChild(name);
+
+                return wrapper;
+            }
+
+            function renderPreviews(files) {
+                previewGrid.innerHTML = "";
+
+                files.slice(0, 30).forEach((file) => {
+                    previewGrid.appendChild(createPreview(file));
+                });
+
+                if (files.length > 30) {
+                    const more = document.createElement("div");
+                    more.className = "preview";
+                    more.style.display = "grid";
+                    more.style.placeItems = "center";
+                    more.style.color = "#aab3c7";
+                    more.style.fontSize = "12px";
+                    more.textContent = `+${files.length - 30}`;
+                    previewGrid.appendChild(more);
+                }
+            }
+
+            function validateFiles(files) {
+                fileError.textContent = "";
+
+                if (!files.length) {
+                    fileInfo.classList.remove("visible");
+                    submitButton.disabled = true;
+                    return false;
+                }
+
+                if (files.length > MAX_FILES) {
+                    fileError.textContent = `Maximum ${MAX_FILES} fichiers.`;
+                    fileInfo.classList.add("visible");
+                    submitButton.disabled = true;
+                    return false;
+                }
+
+                let total = 0;
+                const errors = [];
+
+                for (const file of files) {
+                    total += file.size;
+
+                    if (
+                        file.type.startsWith("image/") &&
+                        file.size > MAX_PHOTO_SIZE
+                    ) {
+                        errors.push(`${file.name} dépasse 20 Mo`);
+                    } else if (
+                        file.type.startsWith("video/") &&
+                        file.size > MAX_VIDEO_SIZE
+                    ) {
+                        errors.push(`${file.name} dépasse 1 Go`);
+                    } else if (
+                        !file.type.startsWith("image/") &&
+                        !file.type.startsWith("video/")
+                    ) {
+                        errors.push(`${file.name} : format non supporté`);
+                    }
+                }
+
+                fileCount.textContent = `${files.length} fichier${files.length > 1 ? "s" : ""}`;
+
+                totalSize.textContent = formatSize(total);
+
+                fileInfo.classList.add("visible");
+                renderPreviews(files);
+
+                if (errors.length) {
+                    fileError.replaceChildren();
+
+                    errors.slice(0, 4).forEach((error, index) => {
+                        if (index > 0) {
+                            fileError.appendChild(document.createElement("br"));
+                        }
+
+                        fileError.appendChild(document.createTextNode(error));
+                    });
+
+                    if (errors.length > 4) {
+                        const br = document.createElement("br");
+                        fileError.appendChild(br);
+
+                        fileError.appendChild(
+                            document.createTextNode(
+                                `… et ${errors.length - 4} autre(s).`
+                            )
+                        );
+                    }
+
+                    submitButton.disabled = true;
+                    return false;
+                }
+
+                submitButton.disabled = false;
+                return true;
+            }
+
+            commentInput.addEventListener("input", () => {
+                commentCount.textContent = `${commentInput.value.length} / ${MAX_COMMENT_LENGTH}`;
+            });
+
+            fileInput.addEventListener("change", () => {
+                clearStatus();
+                validateFiles(Array.from(fileInput.files));
+            });
+
+            dropzone.addEventListener("click", () => {
+                fileInput.click();
+            });
+
+            dropzone.addEventListener("dragover", (event) => {
+                event.preventDefault();
+                dropzone.classList.add("dragover");
+            });
+
+            dropzone.addEventListener("dragleave", () => {
+                dropzone.classList.remove("dragover");
+            });
+
+            dropzone.addEventListener("drop", (event) => {
+                event.preventDefault();
+                dropzone.classList.remove("dragover");
+
+                fileInput.files = event.dataTransfer.files;
+
+                clearStatus();
+                validateFiles(Array.from(fileInput.files));
+            });
+
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+
+                const files = Array.from(fileInput.files);
+
+                if (!validateFiles(files)) {
+                    return;
+                }
+
+                const familyCode = codeInput.value.trim();
+
+                if (!familyCode) {
+                    codeInput.focus();
+                    return;
+                }
+
+                const formData = new FormData();
+
+                for (const file of files) {
+                    formData.append("files", file);
+                }
+
+                formData.append("sender", senderInput.value.trim());
+
+                formData.append("comment", commentInput.value.trim());
+
+                const xhr = new XMLHttpRequest();
+
+                submitButton.disabled = true;
+                fileInput.disabled = true;
+                senderInput.disabled = true;
+                commentInput.disabled = true;
+                codeInput.disabled = true;
+
+                progressContainer.classList.add("visible");
+
+                progressBar.style.width = "0%";
+                progressPercent.textContent = "0%";
+                progressText.textContent = "Envoi…";
+
+                clearStatus();
+
+                // ========================================================
+                // PROGRESSION
+                // ========================================================
+
+                xhr.upload.onprogress = (event) => {
+                    if (!event.lengthComputable) {
+                        return;
+                    }
+
+                    const percent = Math.round(
+                        (event.loaded / event.total) * 100
+                    );
+
+                    progressBar.style.width = `${percent}%`;
+                    progressPercent.textContent = `${percent}%`;
+
+                    progressText.textContent =
+                        percent >= 100 ? "Finalisation…" : "Envoi…";
+                };
+
+                // ========================================================
+                // RÉPONSE
+                // ========================================================
+
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        progressBar.style.width = "100%";
+                        progressPercent.textContent = "100%";
+                        progressText.textContent = "Terminé";
+
+                        status.textContent = "Souvenirs ajoutés avec succès.";
+
+                        status.className = "status success";
+
+                        form.reset();
+
+                        fileInfo.classList.remove("visible");
+                        previewGrid.innerHTML = "";
+
+                        commentCount.textContent = "0 / 500";
+
+                        submitButton.disabled = true;
+                    } else if (xhr.status === 403) {
+                        status.textContent = "Code famille incorrect.";
+
+                        status.className = "status error";
+
+                        submitButton.disabled = false;
+                    } else if (xhr.status === 413) {
+                        status.textContent = "Un fichier est trop volumineux.";
+
+                        status.className = "status error";
+
+                        submitButton.disabled = false;
+                    } else {
+                        let message = "Erreur lors de l'envoi.";
+
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+
+                            if (response.error) {
+                                message = response.error;
+                            }
+                        } catch (_) {
+                            // Réponse non JSON : message générique.
+                        }
+
+                        status.textContent = message;
+                        status.className = "status error";
+
+                        submitButton.disabled = false;
+                    }
+
+                    fileInput.disabled = false;
+                    senderInput.disabled = false;
+                    commentInput.disabled = false;
+                    codeInput.disabled = false;
+
+                    setTimeout(() => {
+                        progressContainer.classList.remove("visible");
+                    }, 2500);
+                };
+
+                // ========================================================
+                // ERREUR RÉSEAU
+                // ========================================================
+
+                xhr.onerror = () => {
+                    status.textContent = "Erreur réseau.";
+                    status.className = "status error";
+
+                    fileInput.disabled = false;
+                    senderInput.disabled = false;
+                    commentInput.disabled = false;
+                    codeInput.disabled = false;
+                    submitButton.disabled = false;
+
+                    progressContainer.classList.remove("visible");
+                };
+
+                // ========================================================
+                // REQUÊTE
+                // ========================================================
+
+                xhr.open("POST", "/upload");
+
+                /*
+                 * IMPORTANT :
+                 *
+                 * Le code famille est envoyé dans un header HTTP
+                 * séparé du multipart.
+                 *
+                 * Le serveur peut donc vérifier le code AVANT
+                 * de lancer Multer.
+                 */
+                xhr.setRequestHeader("X-Family-Code", familyCode);
+
+                xhr.send(formData);
+            });
+        </script>
+
+        <style>
+            .gallery-link {
+                display: block;
+                width: max-content;
+                margin: 18px auto 0;
+                padding: 10px 15px;
+                border: 1px solid rgba(255, 255, 255, 0.13);
+                border-radius: 999px;
+                color: #cbd2df;
+                text-decoration: none;
+                background: rgba(255, 255, 255, 0.045);
+                backdrop-filter: blur(12px);
+                font-size: 12px;
+            }
+            .gallery-link:hover {
+                background: rgba(255, 255, 255, 0.09);
+                color: white;
+            }
+        </style>
+        <a class="gallery-link" href="/gallery"
+            >Voir les souvenirs partagés →</a
+        >
+    </body>
+</html>

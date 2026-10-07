@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#070a10" />
+        <title>Accès privé · Souvenirs</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            :root {
+                --bg: #070a10;
+                --text: #f7f8fb;
+                --muted: #9ca5b5;
+                --border: rgba(255, 255, 255, 0.13);
+                --accent: #8b9cff;
+                --accent2: #c18cff;
+                --error: #ff707c;
+            }
+            html,
+            body {
+                min-height: 100%;
+                margin: 0;
+            }
+            body {
+                display: grid;
+                place-items: center;
+                padding: 24px;
+                color: var(--text);
+                font-family:
+                    Inter,
+                    ui-sans-serif,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    sans-serif;
+                background:
+                    radial-gradient(
+                        circle at 15% 10%,
+                        rgba(93, 112, 255, 0.2),
+                        transparent 30%
+                    ),
+                    radial-gradient(
+                        circle at 90% 20%,
+                        rgba(190, 95, 255, 0.16),
+                        transparent 28%
+                    ),
+                    var(--bg);
+            }
+            .card {
+                width: min(430px, 100%);
+                padding: 30px;
+                border: 1px solid var(--border);
+                border-radius: 28px;
+                background: linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.09),
+                    rgba(255, 255, 255, 0.045)
+                );
+                box-shadow:
+                    0 35px 100px rgba(0, 0, 0, 0.45),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+                backdrop-filter: blur(28px);
+            }
+            .icon {
+                width: 58px;
+                height: 58px;
+                display: grid;
+                place-items: center;
+                border-radius: 18px;
+                background: rgba(139, 156, 255, 0.13);
+                border: 1px solid rgba(139, 156, 255, 0.25);
+                font-size: 25px;
+            }
+            .eyebrow {
+                margin-top: 20px;
+                color: #bfc7d7;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+            }
+            h1 {
+                margin: 9px 0 8px;
+                font-size: 35px;
+                letter-spacing: -0.045em;
+            }
+            p {
+                margin: 0 0 24px;
+                color: var(--muted);
+                line-height: 1.55;
+                font-size: 14px;
+            }
+            label {
+                display: block;
+                margin: 0 0 8px 2px;
+                color: #d7dce5;
+                font-size: 12px;
+                font-weight: 650;
+            }
+            input {
+                width: 100%;
+                height: 50px;
+                padding: 0 14px;
+                border-radius: 13px;
+                outline: 0;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                background: rgba(0, 0, 0, 0.18);
+                color: white;
+                font: inherit;
+                font-size: 15px;
+            }
+            input:focus {
+                border-color: rgba(139, 156, 255, 0.72);
+                box-shadow: 0 0 0 3px rgba(139, 156, 255, 0.08);
+            }
+            button {
+                width: 100%;
+                height: 52px;
+                margin-top: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.16);
+                border-radius: 13px;
+                background: linear-gradient(
+                    100deg,
+                    var(--accent),
+                    var(--accent2)
+                );
+                color: white;
+                font: inherit;
+                font-weight: 750;
+                cursor: pointer;
+            }
+            .error {
+                min-height: 20px;
+                margin-top: 14px;
+                color: var(--error);
+                font-size: 13px;
+                text-align: center;
+            }
+            .back {
+                display: block;
+                margin-top: 18px;
+                text-align: center;
+                color: #7f899c;
+                text-decoration: none;
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <main class="card">
+            <div class="icon">🔒</div>
+            <div class="eyebrow">Espace privé</div>
+            <h1>Les souvenirs</h1>
+            <p>Cette galerie est réservée aux personnes autorisées.</p>
+            <form id="loginForm">
+                <label for="password">Mot de passe</label>
+                <input
+                    id="password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                    autofocus
+                />
+                <button type="submit">Accéder à la galerie</button>
+                <div class="error" id="error"></div>
+            </form>
+            <a class="back" href="/">← Retour à l'envoi</a>
+        </main>
+        <script>
+            const form = document.getElementById("loginForm");
+            const password = document.getElementById("password");
+            const error = document.getElementById("error");
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                error.textContent = "";
+                const r = await fetch("/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ password: password.value }),
+                });
+                if (r.ok) {
+                    location.href = "/gallery";
+                    return;
+                }
+                const data = await r.json().catch(() => ({}));
+                error.textContent = data.error || "Mot de passe incorrect.";
+                password.select();
+            });
+        </script>
+    </body>
+</html>

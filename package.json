@@ -1,0 +1,30 @@
+{
+    "name": "DearGrandParents",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "start": "node server.js",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "test": "node --test",
+        "check": "npm run lint && npm run format:check && npm test"
+    },
+    "dependencies": {
+        "dotenv": "^18.0.6",
+        "express": "^4.18.2",
+        "express-rate-limit": "^8.7.1",
+        "file-type": "^21.3.4",
+        "multer": "^2.4.0",
+        "sharp": "^0.35.5"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.12.0",
+        "eslint-config-prettier": "^10.1.8",
+        "globals": "^17.13.0",
+        "madge": "^8.0.0",
+        "prettier": "^3.9.9"
+    }
+}

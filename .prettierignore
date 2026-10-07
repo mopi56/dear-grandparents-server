@@ -1,0 +1,5 @@
+node_modules/
+uploads/
+metadata.json
+dependency-graph.svg
+.env

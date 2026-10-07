@@ -1,0 +1,15 @@
+services:
+    dear-grandparents-server:
+        build: .
+        container_name: dear-grandparents-server
+        restart: unless-stopped
+        ports:
+            - "3400:3000"
+        env_file:
+            - .env
+        volumes:
+            - ./uploads:/app/uploads
+            - ./data:/app/data
+        environment:
+            NODE_ENV: production
+            DATA_DIR: /app/data

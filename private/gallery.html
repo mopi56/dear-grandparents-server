@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#070a10" />
+        <title>Galerie · Souvenirs</title>
+        <link rel="stylesheet" href="css/gallery.css" />
+    </head>
+    <body>
+        <main class="container">
+            <header>
+                <div>
+                    <div class="eyebrow">Album familial · accès privé</div>
+                    <h1>Souvenirs</h1>
+                    <p class="subtitle">
+                        Les photos et vidéos partagées par tout le monde.
+                    </p>
+                </div>
+                <div class="actions">
+                    <a class="btn" href="/"> + Ajouter un souvenir </a>
+                    <button class="btn" id="logout" type="button">
+                        Se déconnecter
+                    </button>
+                </div>
+            </header>
+            <div class="stats">
+                <span>
+                    <strong id="count">—</strong>
+                    souvenirs
+                </span>
+                <span id="refresh"> Chargement… </span>
+            </div>
+            <section id="gallery" class="grid">
+                <div class="loading">Chargement des souvenirs…</div>
+            </section>
+            <div
+                id="paginationWrapper"
+                class="pagination-wrapper"
+                style="display: none"
+            >
+                <div id="pagination" class="pagination"></div>
+                <div id="paginationInfo" class="pagination-info"></div>
+            </div>
+        </main>
+        <div class="lightbox" id="lightbox">
+            <button class="close" id="close" type="button" aria-label="Fermer">
+                ×
+            </button>
+            <div id="lightContent"></div>
+            <div class="light-meta" id="lightMeta"></div>
+        </div>
+        <script src="js/gallery.js" defer></script>
+    </body>
+</html>
